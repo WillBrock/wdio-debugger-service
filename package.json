@@ -1,0 +1,28 @@
+{
+  "name": "wdio-debugger-service",
+  "version": "0.0.1",
+  "description": "WebdriverIO service to pause and step through tests",
+  "main": "index.js",
+  "scripts": {
+    "build": "run-s clean compile",
+    "clean": "rimraf ./build",
+    "compile": "babel src/ -d build/ --config-file ./babel.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "WebdriverIO",
+    "debugging",
+    "javascript",
+    "testing",
+    "e2e"
+  ],
+  "author": "Will Brock",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3"
+  }
+}
