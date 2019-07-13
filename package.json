@@ -5,7 +5,7 @@
   "main": "index.js",
     "repository": {
     "type": "git",
-    "url": "git+https://github.com/WillBrock/wdio-debugger-service.git"
+    "url": "https://github.com/WillBrock/wdio-debugger-service.git"
   },
   "scripts": {
     "build": "run-s clean compile",
