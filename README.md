@@ -1,6 +1,6 @@
 # WebdriverIO Debugger Service
 
-Allows tests to be paused and the ability to step through each command through a chrome browser extension.
+Allows tests to be paused and the ability to step through each command with a chrome browser extension.
 
 This requires the WebdriverIO Debugger chrome extension.
 

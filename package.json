@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "WebdriverIO service to pause and step through tests",
   "main": "index.js",
+    "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WillBrock/wdio-debugger-service.git"
+  },
   "scripts": {
     "build": "run-s clean compile",
     "clean": "rimraf ./build",
