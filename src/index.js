@@ -1,6 +1,8 @@
 export default class DebuggerService {
-	beforeCommand(command) {
+	beforeCommand(command, args) {
 		const wdio_class = `.wdio-hidden-element`;
+		const dollar     = command === `$`;
+		const selector   = args[0];
 
 		const check_commands = [
 			`click`,
@@ -11,6 +13,16 @@ export default class DebuggerService {
 
 		if(!check_commands.includes(command)) {
 			return;
+		}
+
+		if(dollar && selector) {
+			browser.execute((selector, wdio_class) => {
+				const state = document.querySelector(wdio_class).getAttribute(`data-state`);
+
+				if(state === `paused`) {
+					document.querySelector(selector).style.border = `3px solid #FF8C00`;
+				}
+			}, selector, wdio_class);
 		}
 
 		browser.waitUntil(() => {
@@ -33,6 +45,18 @@ export default class DebuggerService {
 			return state === `playing` || next;
 		});
 
-		document.querySelector(wdio_class).removeAttribute(`data-next`);
+		browser.execute((wdio_class) => {
+			document.querySelector(wdio_class).removeAttribute(`data-next`);
+		}, wdio_class);
+
+		if(dollar && selector) {
+			browser.execute((selector, wdio_class) => {
+				const state = document.querySelector(wdio_class).getAttribute(`data-state`);
+
+				if(state === `paused`) {
+					document.querySelector(selector).style.border = `none`;
+				}
+			}, selector, wdio_class);
+		}
 	}
 }
