@@ -1,5 +1,5 @@
 export default class DebuggerService {
-	onBeforeCommand(command) {
+	beforeCommand(command) {
 		const wdio_class = `.wdio-hidden-element`;
 
 		const check_commands = [
