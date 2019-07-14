@@ -15,7 +15,7 @@ export default class DebuggerService {
 
 		browser.waitUntil(() => {
 			const exists = browser.execute((wdio_class) => {
-				return document.querySelector(wdio_class) === null ? false : true;
+				return document.querySelector(wdio_class) !== null;
 			}, wdio_class);
 
 			if(!exists) {
