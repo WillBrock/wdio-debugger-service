@@ -2,7 +2,7 @@
   "name": "wdio-debugger-service",
   "version": "0.0.1",
   "description": "WebdriverIO service to pause and step through tests",
-  "main": "index.js",
+  "main": "./build/index",
     "repository": {
     "type": "git",
     "url": "https://github.com/WillBrock/wdio-debugger-service.git"
