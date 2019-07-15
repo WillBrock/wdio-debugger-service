@@ -1,62 +1,82 @@
 export default class DebuggerService {
+	constructor() {
+		this.command_selector = null;
+		this.wdio_class       = `.wdio-hidden-element`;
+	}
+
 	beforeCommand(command, args) {
-		const wdio_class = `.wdio-hidden-element`;
-		const dollar     = command === `$`;
-		const selector   = args[0];
-
-		const check_commands = [
-			`click`,
-			`url`,
-			`$`,
-			`value`,
-		];
-
-		if(!check_commands.includes(command)) {
+		if(!this.checkCommands.includes(command)) {
 			return;
 		}
 
-		if(dollar && selector) {
-			browser.execute((selector, wdio_class) => {
-				const state = document.querySelector(wdio_class).getAttribute(`data-state`);
+		this.command_selector = this.validSelector(args[0]) ? args[0] : this.command_selector;
 
-				if(state === `paused`) {
-					document.querySelector(selector).style.border = `3px solid #FF8C00`;
-				}
-			}, selector, wdio_class);
+		if(this.command_selector) {
+			const state = this.getAttribute(`data-state`);
+
+			if(state === `paused`) {
+				this.setStyle(`border`, `3px solid #FF8C00`);
+			}
 		}
 
 		browser.waitUntil(() => {
-			const exists = browser.execute((wdio_class) => {
-				return document.querySelector(wdio_class) !== null;
-			}, wdio_class);
-
-			if(!exists) {
+			if(!this.validSelector(this.wdio_class)) {
 				return true;
 			}
 
-			const state = browser.execute((wdio_class) => {
-				return document.querySelector(wdio_class).getAttribute(`data-state`);
-			}, wdio_class);
-
-			const next = browser.execute((wdio_class) => {
-				return document.querySelector(wdio_class).getAttribute(`data-next`);
-			}, wdio_class);
+			const state = this.getAttribute(`data-state`);
+			const next  = this.getAttribute(`data-next`);
 
 			return state === `playing` || next;
 		});
 
-		browser.execute((wdio_class) => {
-			document.querySelector(wdio_class).removeAttribute(`data-next`);
-		}, wdio_class);
+		this.removeAttribute(`data-next`);
 
-		if(dollar && selector) {
-			browser.execute((selector, wdio_class) => {
-				const state = document.querySelector(wdio_class).getAttribute(`data-state`);
+		if(this.command_selector) {
+			const state = this.getAttribute(`data-state`);
 
-				if(state === `paused`) {
-					document.querySelector(selector).style.border = `none`;
-				}
-			}, selector, wdio_class);
+			if(state === `paused`) {
+				this.setStyle(`border`, `none`);
+			}
 		}
+	}
+
+	validSelector(selector) {
+		return browser.execute((selector) => {
+			try {
+				return document.querySelector(selector) || false;
+			}
+			catch(e) {
+				return false;
+			}
+		}, selector);
+	}
+
+	getAttribute(attribute) {
+		return browser.execute((selector, attribute) => {
+			return document.querySelector(selector).getAttribute(attribute);
+		}, this.wdio_class, attribute)
+	}
+
+	removeAttribute(attribute) {
+		return browser.execute((selector, attribute) => {
+			return document.querySelector(selector).removeAttribute(attribute);
+		}, this.wdio_class, attribute);
+	}
+
+	setStyle(attribute, value) {
+		browser.execute((selector, attribute, value) => {
+			document.querySelector(selector).style[attribute] = value;
+		}, this.command_selector, attribute, value)
+	}
+
+	get checkCommands() {
+		return [
+			`click`,
+			`url`,
+			`$`,
+			`addValue`,
+			`setValue`,
+		];
 	}
 }
